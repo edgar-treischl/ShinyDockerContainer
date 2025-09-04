@@ -40,7 +40,11 @@ RUN install2.r --error \
     markdown
 
 # Set default CRAN repo and shiny options
+RUN mkdir -p /etc/R && touch /etc/R/Rprofile.site
 RUN echo 'options(repos = c(CRAN = "https://cloud.r-project.org"), shiny.port = 3838, shiny.host = "0.0.0.0")' >> /etc/R/Rprofile.site
+
+
+
 
 # Create app directory
 RUN mkdir -p /app
@@ -49,6 +53,11 @@ WORKDIR /app
 # Create a non-root user (shiny)
 RUN groupadd -g 1000 shiny && useradd -m -d /home/shiny -u 1000 -g shiny -s /bin/bash shiny
 USER shiny
+
+# Create a non-root user: My Old version when deployed
+#RUN groupadd -g 1000 shiny && useradd -c 'shiny' -u 1000 -g 1000 -m -d /home/shiny -s /sbin/nologin shiny
+#USER shiny
+
 
 # Expose the default Shiny port
 EXPOSE 3838
