@@ -48,8 +48,13 @@ RUN mkdir -p /etc/R && touch /etc/R/Rprofile.site
 RUN echo 'options(repos = c(CRAN = "https://cloud.r-project.org"), shiny.port = 3838, shiny.host = "0.0.0.0")' >> /etc/R/Rprofile.site
 
 RUN R -e "remotes::install_gitlab('edgar-treischl/ReportMaster', host = 'gitlab.lrz.de', auth_token = Sys.getenv('GITLAB_PAT'))"
+RUN R -e "remotes::install_gitlab('edgar-treischl/ReportMasterApp', host = 'gitlab.lrz.de', auth_token = Sys.getenv('GITLAB_PAT'))"
 
+RUN groupadd -g 1000 shiny && useradd -m -d /home/shiny -u 1000 -g shiny -s /bin/bash shiny
+USER shiny
 
 # No app included; assumes you'll mount or COPY it
 # Shiny will run anything placed in /app
-CMD ["R", "-e", "shiny::runApp('/app')"]
+#CMD ["R", "-e", "shiny::runApp('/app')"]
+CMD ["R", "-q", "-e", "library(ReportMasterApp); shiny::runApp(system.file('app', package = 'ReportMasterApp'))"]
+
