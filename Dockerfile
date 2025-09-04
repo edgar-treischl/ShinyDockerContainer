@@ -23,6 +23,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     fonts-dejavu \
     && rm -rf /var/lib/apt/lists/*
 
+# Set environment variables for GitLab
+ARG GITLAB_PAT
+ENV GITLAB_PAT=${GITLAB_PAT}
+
 # Install common R packages
 RUN install2.r --error \
     shiny \
@@ -43,6 +47,7 @@ RUN install2.r --error \
 RUN mkdir -p /etc/R && touch /etc/R/Rprofile.site
 RUN echo 'options(repos = c(CRAN = "https://cloud.r-project.org"), shiny.port = 3838, shiny.host = "0.0.0.0")' >> /etc/R/Rprofile.site
 
+RUN R -e "remotes::install_gitlab('edgar-treischl/ReportMaster', host = 'gitlab.lrz.de', auth_token = Sys.getenv('GITLAB_PAT'))"
 
 
 # No app included; assumes you'll mount or COPY it

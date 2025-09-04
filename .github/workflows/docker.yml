@@ -8,6 +8,8 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    env:
+      GITLAB_PAT: ${{ secrets.GITLAB_PAT }}
 
     permissions:
       contents: read
@@ -30,3 +32,5 @@ jobs:
           context: .
           push: true
           tags: ghcr.io/${{ github.repository_owner }}/shinydockercontainer:latest
+          build-args: |
+            GITLAB_PAT=${{ secrets.GITLAB_PAT }}
