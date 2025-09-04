@@ -56,5 +56,4 @@ USER shiny
 # No app included; assumes you'll mount or COPY it
 # Shiny will run anything placed in /app
 #CMD ["R", "-e", "shiny::runApp('/app')"]
-CMD ["R", "-q", "-e", "library(ReportMasterApp); shiny::runApp(system.file('app', package = 'ReportMasterApp'))"]
-
+CMD ["R", "-q", "-e", "library(ReportMasterApp); shiny::runApp(system.file('app', package = 'ReportMasterApp'), port = 3838, host = '0.0.0.0')"]
